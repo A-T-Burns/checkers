@@ -1,3 +1,10 @@
+function createBoard() {
+
+}
+function createBoardInfo() {
+    
+}
+
 const board = [
     null, 0, null, 1, null, 2, null, 3, 
     4, null, 5, null, 6, null, 7, null,
@@ -17,7 +24,7 @@ const divider = document.getElementById("divider")
 let redScore = 12
 let blackScore = 12
 let turn = true
-let playerPieces
+let playerPieces 
 
 let selectedPiece = {
     pieceId: -1,
@@ -31,7 +38,9 @@ let selectedPiece = {
     minusNinthSpace: false,
     minusFourteenthSpace: false,
     minusEighteenthSpace: false,
+    opacity: 1, 
 }
+
 
 const giveListeners = () => {
     if (turn) {
@@ -59,11 +68,53 @@ function getPlayerPieces() {
         playerPieces = blackPieces
     }
     removeCellOnClick()
-    resetBorders()
+    resetOpacity()
 }
 function removeCellOnClick() {
     for (let i = 0; i < cells.length; i++) {
         cells[i].removeAttribute("onclick")
         
     }
+}
+function resetOpacity() {
+    for (let i = 0; i < playerPieces.length; i++) {
+        playerPieces[i].style.opacity = .2;
+        
+    }
+    resetSelectedPieceProps()
+    getSelectedPiece()
+}
+function resetSelectedPieceProps() {
+    selectedPiece.pieceId = -1;
+    selectedPiece.indexOfBoardPiece = -1;
+    selectedPiece.isKing = false;
+    selectedPiece.seventhSpace = false;
+    selectedPiece.ninthSpace = false;
+    selectedPiece.fourteenthSpace = false;
+    selectedPiece.eighteenthSpace = false;
+    selectedPiece.minusSeventhSpace = false;
+    selectedPiece.minusNinthSpace = false;
+    selectedPiece.minusFourteenthSpace = false;
+    selectedPiece.minusEighteenthSpace = false;
+    selectedPiece.opacity = 1;
+}
+function getSelectedPiece() {
+    selectedPiece.pieceId = parseInt(event.target.id)
+    selectedPiece.indexOfBoardPiece = findPiece(selectedPiece.pieceId)
+    isPieceKing()
+}
+function findPiece(pieceId) {
+    let parsed = parseInt(pieceId)
+    return board.indexOf(parsed)
+}
+function isPieceKing() {
+    if (document.getElementById(selectedPiece.pieceId.classList.contains("king"))) {
+        selectedPiece.isKing = true
+    } else {
+        selectedPiece.isKing = false
+    }
+    getAvailableSpaces()
+}
+function getAvailableSpaces() {
+
 }

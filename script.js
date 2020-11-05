@@ -9,8 +9,8 @@ const board = [
     null, 0, null, 1, null, 2, null, 3, 
     4, null, 5, null, 6, null, 7, null,
     null, 8, null, 9, null, 10, null, 11,
-    null, null, null, null, null, null, null, null,
-    null, null, null, null, null, null, null, null,
+    true, null, true, null, true, null, true, null,
+    null, true, null, true, null, true, null, true,
     12, null, 13, null, 14, null, 15, null,
     null, 16, null, 17, null, 18, null, 19,
     20, null, 21, null, 22, null, 23, null,
@@ -45,9 +45,7 @@ let selectedPiece = {
 const giveListeners = () => {
     if (turn) {
         for (let i = 0; i < redPieces.length; i++) {
-            redPieces[i].addEventListener("click", () => {
-                console.log("click")
-            })
+            redPieces[i].addEventListener("click", getPlayerPieces)
         }
     } else {
         for (let i = 0; i < blackPieces.length; i++) {
@@ -99,8 +97,10 @@ function resetSelectedPieceProps() {
     selectedPiece.opacity = 1;
 }
 function getSelectedPiece() {
+    console.log(event)
     selectedPiece.pieceId = parseInt(event.target.id)
     selectedPiece.indexOfBoardPiece = findPiece(selectedPiece.pieceId)
+    console.log(selectedPiece.indexOfBoardPiece)
     isPieceKing()
 }
 function findPiece(pieceId) {
@@ -108,7 +108,7 @@ function findPiece(pieceId) {
     return board.indexOf(parsed)
 }
 function isPieceKing() {
-    if (document.getElementById(selectedPiece.pieceId.classList.contains("king"))) {
+    if (document.getElementById(selectedPiece.pieceId).classList.contains("king")) {
         selectedPiece.isKing = true
     } else {
         selectedPiece.isKing = false
@@ -116,5 +116,20 @@ function isPieceKing() {
     getAvailableSpaces()
 }
 function getAvailableSpaces() {
-
+    let potentialSpaces = []
+    for (let i = 0; i < cells.length; i++) {
+        if (cells[i].classList.contains("noPieceHere") == false) {
+            const space = []
+            const piece = cells[i].querySelector("p")
+            space.push(cells[i])
+            if (piece) {
+                space.push(piece)
+            }
+            potentialSpaces.push(space)
+        }
+// Check all spaces in 1 diagonal tile for empty space, then check the diagonal tile beyond that
+// if the first tile failed. If p
+    }
+    console.log(document.getElementById(`${selectedPiece.pieceId}`))
+    console.log(potentialSpaces)
 }

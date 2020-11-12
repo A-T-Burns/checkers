@@ -24,7 +24,8 @@ const divider = document.getElementById("divider")
 let redScore = 12
 let blackScore = 12
 let turn = true
-let playerPieces 
+let playerPieces
+let pieceIndex = 0
 
 let selectedPiece = {
     pieceId: -1,
@@ -116,7 +117,6 @@ function isPieceKing() {
     getAvailableSpaces()
 }
 function getAvailableSpaces() {
-    let pieceIndex = 0
     let potentialSpaces = []
     let index = 0
     for (let i = 0; i < cells.length; i++) {
@@ -130,17 +130,69 @@ function getAvailableSpaces() {
                 console.log(piece.id)
                 console.log(selectedPiece.pieceId)
                 if (selectedPiece.pieceId == piece.id ) {
-                    pieceIndex = index
+                    pieceIndex = i
                 }
             }
         } else {
             space.push(cells[i])
         }
         potentialSpaces.push(space)
-// Check all spaces in 1 diagonal tile for empty space, then check the diagonal tile beyond that
-// if the first tile failed. If p
     }
-// 
-    console.log(document.getElementById(`${selectedPiece.pieceId}`))
     console.log(potentialSpaces)
+    console.log(pieceIndex)
+    console.log(potentialSpaces[pieceIndex + 9][1])
+    getRealAvailableSpaces(potentialSpaces)
 }
+function getRealAvailableSpaces(allSpaces) {
+    let trueAvailableSpaces = []
+    if (pieceIndex < 9) {
+        if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
+        }
+        if (allSpaces[pieceIndex + 7] && !allSpaces[pieceIndex + 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 7])
+        } 
+    } else if (pieceIndex == 9) {
+        if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
+        }
+        if (allSpaces[pieceIndex + 7] && !allSpaces[pieceIndex + 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 7])
+        }
+        if (allSpaces[pieceIndex - 7] && !allSpaces[pieceIndex - 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 7])
+        }
+    } else if (pieceIndex > 55) {
+        if (allSpaces[pieceIndex - 7] && !allSpaces[pieceIndex - 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 7])
+        }
+        if (allSpaces[pieceIndex - 9] && !allSpaces[pieceIndex - 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 9])
+        }
+    } else if (pieceIndex == 55) {
+        if (allSpaces[pieceIndex + 7] && !allSpaces[pieceIndex + 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 7])
+        }
+        if (allSpaces[pieceIndex - 7] && !allSpaces[pieceIndex - 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 7])
+        }
+        if (allSpaces[pieceIndex - 9] && !allSpaces[pieceIndex - 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 9])
+        }
+    } else {
+        if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
+        }
+        if (allSpaces[pieceIndex + 7] && !allSpaces[pieceIndex + 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex + 7])
+        }
+        if (allSpaces[pieceIndex - 7] && !allSpaces[pieceIndex - 7][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 7])
+        }
+        if (allSpaces[pieceIndex - 9] && !allSpaces[pieceIndex - 9][0].classList.contains("noPieceHere")) {
+            trueAvailableSpaces.push(allSpaces[pieceIndex - 9])
+        }
+    }
+    console.log(trueAvailableSpaces)
+}
+// double the value of the checked space's index if the space is occupied, and check the new value for vacancy.

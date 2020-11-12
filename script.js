@@ -116,20 +116,31 @@ function isPieceKing() {
     getAvailableSpaces()
 }
 function getAvailableSpaces() {
+    let pieceIndex = 0
     let potentialSpaces = []
+    let index = 0
     for (let i = 0; i < cells.length; i++) {
+      index = potentialSpaces.length
+      const space = []
         if (cells[i].classList.contains("noPieceHere") == false) {
-            const space = []
             const piece = cells[i].querySelector("p")
             space.push(cells[i])
             if (piece) {
                 space.push(piece)
+                console.log(piece.id)
+                console.log(selectedPiece.pieceId)
+                if (selectedPiece.pieceId == piece.id ) {
+                    pieceIndex = index
+                }
             }
-            potentialSpaces.push(space)
+        } else {
+            space.push(cells[i])
         }
+        potentialSpaces.push(space)
 // Check all spaces in 1 diagonal tile for empty space, then check the diagonal tile beyond that
 // if the first tile failed. If p
     }
+// 
     console.log(document.getElementById(`${selectedPiece.pieceId}`))
     console.log(potentialSpaces)
 }

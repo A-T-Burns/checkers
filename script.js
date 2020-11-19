@@ -1,20 +1,15 @@
-function createBoard() {
+let board = []
 
-}
-function createBoardInfo() {
-    
-}
-
-const board = [
-    null, 0, null, 1, null, 2, null, 3, 
-    4, null, 5, null, 6, null, 7, null,
-    null, 8, null, 9, null, 10, null, 11,
-    true, null, true, null, true, null, true, null,
-    null, true, null, true, null, true, null, true,
-    12, null, 13, null, 14, null, 15, null,
-    null, 16, null, 17, null, 18, null, 19,
-    20, null, 21, null, 22, null, 23, null,
-]
+// const board = [
+//     null, 0, null, 1, null, 2, null, 3, 
+//     4, null, 5, null, 6, null, 7, null,
+//     null, 8, null, 9, null, 10, null, 11,
+//     true, null, true, null, true, null, true, null,
+//     null, true, null, true, null, true, null, true,
+//     12, null, 13, null, 14, null, 15, null,
+//     null, 16, null, 17, null, 18, null, 19,
+//     20, null, 21, null, 22, null, 23, null,
+// ]
 
 const cells = document.querySelectorAll("td")
 let redPieces = document.querySelectorAll(".redPiece")
@@ -101,6 +96,7 @@ function getSelectedPiece() {
     console.log(event)
     selectedPiece.pieceId = parseInt(event.target.id)
     selectedPiece.indexOfBoardPiece = findPiece(selectedPiece.pieceId)
+    playerPieces[selectedPiece.pieceId].style.opacity = 1
     console.log(selectedPiece.indexOfBoardPiece)
     isPieceKing()
 }
@@ -145,6 +141,7 @@ function getAvailableSpaces() {
 }
 function getRealAvailableSpaces(allSpaces) {
     let trueAvailableSpaces = []
+    board = allSpaces
     if (pieceIndex < 9) {
         if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
@@ -182,17 +179,53 @@ function getRealAvailableSpaces(allSpaces) {
     } else {
         if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
+            trueAvailableSpaces[0].push("Far")
+            trueAvailableSpaces[0].push(pieceIndex + 9)
         }
         if (allSpaces[pieceIndex + 7] && !allSpaces[pieceIndex + 7][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex + 7])
+            trueAvailableSpaces[1].push("Short")
+            trueAvailableSpaces[1].push(pieceIndex + 7)
         }
         if (allSpaces[pieceIndex - 7] && !allSpaces[pieceIndex - 7][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex - 7])
+            trueAvailableSpaces[2].push("Short")
+            trueAvailableSpaces[2].push(pieceIndex - 7)
         }
         if (allSpaces[pieceIndex - 9] && !allSpaces[pieceIndex - 9][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex - 9])
+            trueAvailableSpaces[3].push("Far")
+            trueAvailableSpaces[3].push(pieceIndex - 9)
         }
     }
     console.log(trueAvailableSpaces)
+    getDouble(trueAvailableSpaces)
 }
-// double the value of the checked space's index if the space is occupied, and check the new value for vacancy.
+ function getDouble(options) {
+     if (turn) {
+         for (let i = 0; i < options.length; i++) {
+             console.log(i)
+             if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains("blackPiece")) {
+                options.splice(i,1)
+                i--
+                // check if string is Far or Short
+                if ((options[i][2]) == "Far") {
+                    if (!board[options[i][3] + 9].contains("blackPiece") && !board[options[i][3] + 9].contains("redPiece")) {
+                        options.push(board[options[i][1] + 9])
+                        }
+                    }
+                }
+                // push board[piece index +- 9/7] to options if vacant
+                //adding to the array
+
+            
+             if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains("redPiece")) {
+                 options.splice(i,1)
+                 i--
+             }
+
+         }
+     }
+     console.log(options)
+    }
+ //double the value of the checked space's index if the space is occupied, and check the new value for vacancy.

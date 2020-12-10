@@ -123,8 +123,6 @@ function getAvailableSpaces() {
             space.push(cells[i])
             if (piece) {
                 space.push(piece)
-                console.log(piece.id)
-                console.log(selectedPiece.pieceId)
                 if (selectedPiece.pieceId == piece.id ) {
                     pieceIndex = i
                 }
@@ -134,12 +132,11 @@ function getAvailableSpaces() {
         }
         potentialSpaces.push(space)
     }
-    console.log(potentialSpaces)
-    console.log(pieceIndex)
-    console.log(potentialSpaces[pieceIndex + 9][1])
+    console.log(potentialSpaces, "potential spaces")
     getRealAvailableSpaces(potentialSpaces)
 }
 function getRealAvailableSpaces(allSpaces) {
+    // True available spaces narrows down the 4 immediate squares surrounding our selected piece
     let trueAvailableSpaces = []
     board = allSpaces
     if (pieceIndex < 9) {
@@ -177,6 +174,7 @@ function getRealAvailableSpaces(allSpaces) {
             trueAvailableSpaces.push(allSpaces[pieceIndex - 9])
         }
     } else {
+        // Short is a 7 square check & Far is a 9 square check
         if (allSpaces[pieceIndex + 9] && !allSpaces[pieceIndex + 9][0].classList.contains("noPieceHere")) {
             trueAvailableSpaces.push(allSpaces[pieceIndex + 9])
             trueAvailableSpaces[0].push("Far")
@@ -198,34 +196,41 @@ function getRealAvailableSpaces(allSpaces) {
             trueAvailableSpaces[3].push(pieceIndex - 9)
         }
     }
-    console.log(trueAvailableSpaces)
+    console.log(trueAvailableSpaces, "true available spaces")
     getDouble(trueAvailableSpaces)
 }
  function getDouble(options) {
-     if (turn) {
-         for (let i = 0; i < options.length; i++) {
-             console.log(i)
-             if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains("blackPiece")) {
-                options.splice(i,1)
-                i--
-                // check if string is Far or Short
-                if ((options[i][2]) == "Far") {
-                    if (!board[options[i][3] + 9].contains("blackPiece") && !board[options[i][3] + 9].contains("redPiece")) {
-                        options.push(board[options[i][1] + 9])
+         const opposition = turn ? "blackPiece" : "redPiece"
+         const allyPiece = turn ? "redPiece" : "blackPiece"
+         function checkForOpposition(options) {
+            for (let i = 0; i < options.length; i++) {
+                // 1. we are iterating here to check whether our current option (within options) is a black piece... if it is
+                // 2. we want to check and see if we can jump over it
+                // 3. the point here is we are trying to remove or add options to our "options" array
+                if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains(opposition)) {
+                    
+                    // Here the idea was to check whether the black piece was in a far position - if was we want to check 9 spaces ahead
+                    // in order to see if that square was an option - this is essentially gives us a "jump option".
+                    if ((options[i][2]) == "Far") {
+                        console.log(options[i] , "here we are")
+                        console.log(board , "board")
+                        if (!board[options[i][3] + 9].classList.contains(opposition) && !board[options[i][3] + 9].classList.contains(allyPiece)) {
+                                // Push our "jump option" into our options...
+                                options.push(board[options[i][1] + 9])
+                                options.splice(i,1)
+                                i--
                         }
                     }
                 }
-                // push board[piece index +- 9/7] to options if vacant
-                //adding to the array
-
-            
-             if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains("redPiece")) {
-                 options.splice(i,1)
-                 i--
-             }
-
-         }
-     }
-     console.log(options)
+            }
+        }
+        checkForOpposition(options)
+        console.log(options)
+                // Get rid of the black piece that we our evaluating....
+                
+            //  if (options[i].length > 1 && typeof(options[i][1]) != "string" && options[i][1].classList.contains("redPiece")) {
+            //     options.splice(i,1)
+            //     i--
+            //  }
     }
  //double the value of the checked space's index if the space is occupied, and check the new value for vacancy.
